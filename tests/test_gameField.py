@@ -14,6 +14,7 @@ class BasicGameFieldTestCase(unittest.TestCase):
     def test_basicFieldWasConstructedCorrectly(self):
         """
         The BasicField should be a GameField of size 4x4 filled with EmptyTiles.
+        Coordinates: 0x is on the left, 0y is at the top
         """
         for x in range(4):
             for y in range(4):
@@ -25,32 +26,43 @@ class BasicGameFieldTestCase(unittest.TestCase):
                     self.game_field.field_data[x][y].tile,
                     EmptyTile
                 )
-        self.fail()
 
     def test_northIterator(self):
         """
         Tests, that the game_field returs a correctly configured Iterator for
         GameField traversal on swiping north.
         """
-        self.fail()
+        field_iterator = self.game_field.get_north_iterator()
+        for i, tile_path in enumerate(field_iterator):
+            for j, target_tile in enumerate(tile_path):
+                self.assertEqual(target_tile, self.game_field.field_data[i % 4][int(i / 4) - j])
 
     def test_eastIterator(self):
         """
         Tests, that the game_field returs a correctly configured Iterator for
         GameField traversal on swiping east.
         """
-        self.fail()
+        field_iterator = self.game_field.get_east_iterator()
+        for i, tile_path in enumerate(field_iterator):
+            for j, target_tile in enumerate(tile_path):
+                self.assertEqual(target_tile, self.game_field.field_data[3 - int(i / 4) + j][i % 4])
 
     def test_southIterator(self):
         """
         Tests, that the game_field returs a correctly configured Iterator for
         GameField traversal on swiping south.
         """
-        self.fail()
+        field_iterator = self.game_field.get_south_iterator()
+        for i, tile_path in enumerate(field_iterator):
+            for j, target_tile in enumerate(tile_path):
+                self.assertEqual(target_tile, self.game_field.field_data[i % 4][3 - int(i / 4) + j])
 
     def test_westIterator(self):
         """
         Tests, that the game_field returs a correctly configured Iterator for
         GameField traversal on swiping west.
         """
-        self.fail()
+        field_iterator = self.game_field.get_west_iterator()
+        for i, tile_path in enumerate(field_iterator):
+            for j, target_tile in enumerate(tile_path):
+                self.assertEqual(target_tile, self.game_field.field_data[int(i / 4) - j][i % 4])
