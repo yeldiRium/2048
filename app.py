@@ -30,8 +30,6 @@ class App(object):
         self.renderer.render(self.game_field)
 
         while run_indefinitely or runlimit_not_reached_yet:
-            runlimit_not_reached_yet = max_prompts > self.prompt_counter
-            self.prompt_counter += 1
             user_input = self.input.getline('Wohin swipen? n/e/s/w | q for exit')
             if self.input_invalid(user_input):
                 self.output.write('Ungültiger Input, bitte wiederholen.')
@@ -53,3 +51,6 @@ class App(object):
                     exit()
             # render again after input and calculation
             self.renderer.render(self.game_field)
+
+            self.prompt_counter += 1
+            runlimit_not_reached_yet = max_prompts > self.prompt_counter
