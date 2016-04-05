@@ -3,9 +3,17 @@ import unittest
 from gamefield.gamefield import GameField
 
 
-class GameFieldTestCase(unittest.TestCase):
+class BasicGameFieldTestCase(unittest.TestCase):
     def setUp(self):
-        self.game_field = GameField()
+        # basic_field instantiates a GameField and fills it with TileContainers
+        # and empty Tiles
+        self.game_field = GameField.basic_field()
+
+    def test_basicFieldWasConstructedCorrectly(self):
+        """
+        The BasicField should be a GameField of size 4x4 filled with EmptyTiles.
+        """
+        self.fail()
 
     def test_northIterator(self):
         """
