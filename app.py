@@ -9,12 +9,17 @@ class App(object):
         self.game_field = GameField.basic_field()
         self.game_controller = GameController(self.game_field)
         self.renderer = ConsoleRenderer()  # type: Renderer
+        self.prompt_counter = 0
 
     def input_invalid(self, user_input: str) -> bool:
         return user_input not in ['n', 'e', 's', 'w', 'q']
 
-    def run(self):
-        while True:
+    def run(self, max_prompts: int = -1):
+        run_indefinitely = max_prompts == -1
+        runlimit_not_reached_yet = max_prompts >= self.prompt_counter
+
+        while run_indefinitely or runlimit_not_reached_yet:
+            self.prompt_counter += 1
             self.renderer.render(self.game_field)
             user_input = input('Wohin swipen? n/e/s/w | q for exit')
             if self.input_invalid(user_input):
