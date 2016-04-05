@@ -24,11 +24,14 @@ class App(object):
 
     def run(self, max_prompts: int = -1):
         run_indefinitely = max_prompts == -1
-        runlimit_not_reached_yet = max_prompts >= self.prompt_counter
+        runlimit_not_reached_yet = max_prompts > self.prompt_counter
+
+        # render once before everything starts, so the initial field can be seen
+        self.renderer.render(self.game_field)
 
         while run_indefinitely or runlimit_not_reached_yet:
+            runlimit_not_reached_yet = max_prompts > self.prompt_counter
             self.prompt_counter += 1
-            self.renderer.render(self.game_field)
             user_input = self.input.getline('Wohin swipen? n/e/s/w | q for exit')
             if self.input_invalid(user_input):
                 self.output.write('Ungültiger Input, bitte wiederholen.')
@@ -48,3 +51,5 @@ class App(object):
                     #self.game_controller.swipeWestAction()
                 else:
                     exit()
+            # render again after input and calculation
+            self.renderer.render(self.game_field)
