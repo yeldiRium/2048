@@ -18,6 +18,14 @@ class EmptyTileTestCase(unittest.TestCase):
         self.assertFalse(self.test_tile.can_move_to(self.empty_tile))
         self.assertFalse(self.test_tile.can_move_to(self.blocking_tile))
 
+    def test_fusingWithEmptyTile(self):
+        self.assertFalse(self.test_tile.can_fuse_with(self.empty_tile))
+        self.assertFalse(self.test_tile.can_fuse_with(self.blocking_tile))
+
+    def test_fusingEmptyTile(self):
+        self.assertFalse(self.test_tile.can_accept_fusion_with(self.empty_tile))
+        self.assertFalse(self.test_tile.can_accept_fusion_with(self.blocking_tile))
+
 
 class BlockingTileTestCase(unittest.TestCase):
     def setUp(self):
@@ -33,3 +41,11 @@ class BlockingTileTestCase(unittest.TestCase):
     def test_movingblockingTile(self):
         self.assertTrue(self.test_tile.can_move_to(self.empty_tile))
         self.assertFalse(self.test_tile.can_move_to(self.blocking_tile))
+
+    def test_fusingWithBlockingTile(self):
+        self.assertFalse(self.test_tile.can_fuse_with(self.empty_tile))
+        self.assertFalse(self.test_tile.can_fuse_with(self.blocking_tile))
+
+    def test_fusingBlockingTile(self):
+        self.assertFalse(self.test_tile.can_accept_fusion_with(self.empty_tile))
+        self.assertFalse(self.test_tile.can_accept_fusion_with(self.blocking_tile))
