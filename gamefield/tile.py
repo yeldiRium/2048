@@ -1,0 +1,2 @@
+class EmptyTile(object):
+    pass
