@@ -20,6 +20,7 @@ class App(object):
         self.output = output_stream
         self.game_field = GameField.basic_field()
         self.game_controller = GameController(self.game_field)
+        self.game_controller.initialize()
         self.renderer = ConsoleRenderer(output_stream)  # type: Renderer
         self.prompt_counter = 0
 
