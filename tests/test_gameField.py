@@ -1,6 +1,8 @@
 import unittest
 
 from gamefield.gamefield import GameField
+from gamefield.tilecontainer import TileContainer
+from gamefield.tile import EmptyTile
 
 
 class BasicGameFieldTestCase(unittest.TestCase):
@@ -13,6 +15,16 @@ class BasicGameFieldTestCase(unittest.TestCase):
         """
         The BasicField should be a GameField of size 4x4 filled with EmptyTiles.
         """
+        for x in range(4):
+            for y in range(4):
+                self.assertIsInstance(
+                    self.game_field.field_data[x][y],
+                    TileContainer
+                )
+                self.assertIsInstance(
+                    self.game_field.field_data[x][y].tile,
+                    EmptyTile
+                )
         self.fail()
 
     def test_northIterator(self):
