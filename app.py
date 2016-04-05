@@ -1,15 +1,17 @@
+from console.console_renderer import ConsoleRenderer
+from console.input import ConsoleInput
+from game_controller import GameController
 from gamefield.gamefield import GameField
 from renderer.renderer import Renderer
-from renderer.console_renderer import ConsoleRenderer
-from game_controller import GameController
 
 
 class App(object):
-    def __init__(self):
+    def __init__(self, console_input: ConsoleInput):
         self.game_field = GameField.basic_field()
         self.game_controller = GameController(self.game_field)
         self.renderer = ConsoleRenderer()  # type: Renderer
         self.prompt_counter = 0
+        self.input = console_input
 
     def input_invalid(self, user_input: str) -> bool:
         return user_input not in ['n', 'e', 's', 'w', 'q']
@@ -21,7 +23,7 @@ class App(object):
         while run_indefinitely or runlimit_not_reached_yet:
             self.prompt_counter += 1
             self.renderer.render(self.game_field)
-            user_input = input('Wohin swipen? n/e/s/w | q for exit')
+            user_input = self.input.getline('Wohin swipen? n/e/s/w | q for exit')
             if self.input_invalid(user_input):
                 print('Ungültiger Input, bitte wiederholen.')
                 continue

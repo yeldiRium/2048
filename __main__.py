@@ -1,4 +1,6 @@
 from app import App
+from console.input import ConsoleInput
 
-app = App()
+input = ConsoleInput()
+app = App(input)
 app.run()
