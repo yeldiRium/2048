@@ -17,6 +17,20 @@ class Tile(metaclass=ABCMeta):
         """
         pass
 
+    @abstractmethod
+    def can_fuse_with(self, tile: 'Tile') -> bool:
+        """
+        True, if self can fuse with the given tile.
+        """
+        pass
+
+    @abstractmethod
+    def can_accept_fusion_with(self, tile: 'Tile') -> bool:
+        """
+        True, if a given tile can fuse with self and take its place.
+        """
+        pass
+
 
 class EmptyTile(Tile):
     def can_move_to(self, tile: 'Tile') -> bool:
@@ -33,6 +47,18 @@ class EmptyTile(Tile):
         """
         return True
 
+    def can_fuse_with(self, tile: 'Tile') -> bool:
+        """
+        EmptyTiles can't fuse with anything.
+        """
+        return False
+
+    def can_accept_fusion_with(self, tile: 'Tile') -> bool:
+        """
+        Nothing can be fused onto an EmptyTile.
+        """
+        return False
+
 
 class BlockingTile(Tile):
     def can_move_to(self, tile: 'Tile') -> bool:
@@ -46,5 +72,17 @@ class BlockingTile(Tile):
         """
         Are simple tiles that take up space and thus other tiles can't be moved
         onto them.
+        """
+        return False
+
+    def can_fuse_with(self, tile: 'Tile') -> bool:
+        """
+        BlockingTiles can't fuse with anything.
+        """
+        return False
+
+    def can_accept_fusion_with(self, tile: 'Tile') -> bool:
+        """
+        Nothing can be fused onte a BlockingTile.
         """
         return False
