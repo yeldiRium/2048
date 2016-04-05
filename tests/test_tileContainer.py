@@ -7,7 +7,7 @@ from gamefield.tilecontainer import TileContainer
 
 class TileContainerTestCase(unittest.TestCase):
     def setUp(self):
-        self.empty_tile_container = TileContainer(EmptyTile)
+        self.empty_tile_container = TileContainer(EmptyTile())
         # TODO: add other tiles to containers
 
     def test_tileProperty(self):
