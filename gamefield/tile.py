@@ -1,5 +1,13 @@
-class EmptyTile(object):
+from abc import ABCMeta, abstractmethod
+
+
+class Tile(metaclass=ABCMeta):
     pass
 
-class BlockingTile(object):
+
+class EmptyTile(Tile):
+    pass
+
+
+class BlockingTile(Tile):
     pass
