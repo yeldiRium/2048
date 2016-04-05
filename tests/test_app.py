@@ -1,6 +1,7 @@
 import unittest
-from unittest.mock import MagicMock, call
+from unittest.mock import MagicMock, call, create_autospec
 from app import App
+from renderer.renderer import Renderer
 
 
 class AppTestCase(unittest.TestCase):
@@ -13,6 +14,7 @@ class AppTestCase(unittest.TestCase):
         self.output.write = MagicMock()
 
         self.app = App(self.input, self.output)
+        self.app.renderer = create_autospec(Renderer)  # type: MagicMock
 
     def test_runZeroTimesRendersOnce(self):
         self.app.run(max_prompts=0)
@@ -20,9 +22,9 @@ class AppTestCase(unittest.TestCase):
 
     def test_runOneTimeSwipingSouthRendersTwice(self):
         self.app.run(max_prompts=1)
-        count = self.output.write.mock_calls.count(call.write('rendering...'))
+        count = len(self.app.renderer.mock_calls)
         self.assertEqual(
             2,
             count,
-            '\'rendering...\' should be printed two times.'
+            "Method render on Renderer should be called two times."
         )
