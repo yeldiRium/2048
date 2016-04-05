@@ -18,7 +18,12 @@ class AppTestCase(unittest.TestCase):
 
     def test_runZeroTimesRendersOnce(self):
         self.app.run(max_prompts=0)
-        self.output.write.assert_any_call('rendering...')
+        count = len(self.app.renderer.mock_calls)
+        self.assertEqual(
+            1,
+            count,
+            "Method render on Renderer should be called one time."
+        )
 
     def test_runOneTimeSwipingSouthRendersTwice(self):
         self.app.run(max_prompts=1)
