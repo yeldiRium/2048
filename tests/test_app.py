@@ -1,9 +1,6 @@
 import unittest
-from unittest.mock import call
-from unittest.mock import Mock, MagicMock
-from unittest.mock import create_autospec
+from unittest.mock import MagicMock
 from app import App
-from console.input import ConsoleInput
 
 
 class AppTestCase(unittest.TestCase):
