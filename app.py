@@ -7,6 +7,10 @@ from renderer.renderer import Renderer
 
 
 class App(object):
+    """
+    The App administrates the game. It instantiates a GameField and a GameCon-
+    troller and makes them interact with the user.
+    """
     def __init__(
             self,
             input_stream: ConsoleInput,
@@ -20,9 +24,16 @@ class App(object):
         self.prompt_counter = 0
 
     def input_invalid(self, user_input: str) -> bool:
+        """
+        Checks if a given user input is valid. Allowed inputs are one charachter
+        directions or 'q' to end the application.
+        """
         return user_input not in ['n', 'e', 's', 'w', 'q']
 
     def run(self, max_prompts: int = -1):
+        """
+        Runs the mainloop for a maximum of max_prompts times.
+        """
         run_indefinitely = max_prompts == -1
         runlimit_not_reached_yet = max_prompts > self.prompt_counter
 
