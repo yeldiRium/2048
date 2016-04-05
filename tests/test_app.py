@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, call
 from app import App
 
 
@@ -17,3 +17,12 @@ class AppTestCase(unittest.TestCase):
     def test_runZeroTimesRendersOnce(self):
         self.app.run(max_prompts=0)
         self.output.write.assert_any_call('rendering...')
+
+    def test_runOneTimeSwipingSouthRendersTwice(self):
+        self.app.run(max_prompts=1)
+        count = self.output.write.mock_calls.count(call.write('rendering...'))
+        self.assertEqual(
+            2,
+            count,
+            '\'rendering...\' should be printed two times.'
+        )
