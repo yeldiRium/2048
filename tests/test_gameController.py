@@ -152,24 +152,36 @@ class GameControllerTestCase(unittest.TestCase):
             self.game_field,
             self.tile_collection
         )
+        self.game_controller._random.seed(1337)
         with self.assertRaises(GameNotInitializedError):
             score = self.game_controller.score
         self.game_controller.initialize()
 
-        # TODO: fit asserts to seeded results
         self.assertEqual(
-            4,
+            0,
             self.game_controller.swipe_east_action()
         )
         self.assertEqual(
-            8,
+            4,
+            self.game_controller.swipe_south_action()
+        )
+        self.assertEqual(
+            12,
             self.game_controller.swipe_south_action()
         )
         self.assertEqual(
             16,
-            self.game_controller.swipe_east_action()
+            self.game_controller.swipe_south_action()
         )
-        self.assertEqual(16, self.game_controller.score)
+        self.assertEqual(
+            16,
+            self.game_controller.swipe_south_action()
+        )
+        self.assertEqual(
+            20,
+            self.game_controller.swipe_south_action()
+        )
+        self.assertEqual(20, self.game_controller.score)
 
     def test_initialization_enables_score(self):
         """
