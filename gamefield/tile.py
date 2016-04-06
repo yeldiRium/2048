@@ -63,15 +63,15 @@ class EmptyTile(Tile):
 class BlockingTile(Tile):
     def can_move_to(self, tile: 'Tile') -> bool:
         """
-        BlockingTiles are simple tiles that underly the usual physical rules and
-        can thus be moved onto everything that want to be moved on.
+        BlockingTiles are simple tiles that underlie the usual physical rules
+        and can thus be moved onto everything that want to be moved on.
         """
         return tile.can_be_replaced_with(self)
 
     def can_be_replaced_with(self, tile: 'Tile') -> bool:
         """
-        Are simple tiles that take up space and thus other tiles can't be moved
-        onto them.
+        BlockingTiles are simple tiles that take up space and thus other tiles
+        can't be moved onto them.
         """
         return False
 
@@ -83,6 +83,6 @@ class BlockingTile(Tile):
 
     def can_accept_fusion_with(self, tile: 'Tile') -> bool:
         """
-        Nothing can be fused onte a BlockingTile.
+        Nothing can be fused onto a BlockingTile.
         """
         return False
