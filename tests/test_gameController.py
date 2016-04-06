@@ -11,6 +11,27 @@ class GameControllerTestCase(unittest.TestCase):
         self.game_field = create_autospec(GameField)
         self.game_field.field_data = {}
         self.game_controller = GameController(self.game_field, self.tile_collection)
+        self.game_controller._random.seed(1337)
+
+    def test_initialize(self):
+        """
+        Tests that initialization places two random Tiles on the GameField.
+        """
+        game_field = GameField(self.tile_collection)
+        game_controller = GameController(game_field, self.tile_collection)
+        game_controller._random.seed(1337)
+        game_controller.initialize()
+        # The spaces which the random tiles occupy are based on the random gene-
+        # rator seed and thus are always equal in tests.
+        self.assertEqual(
+            game_field.field_data[2][1].tile,
+            self.tile_collection.get_tile('value', value=2)
+        )
+        self.assertEqual(
+            game_field.field_data[2][3].tile,
+            self.tile_collection.get_tile('value', value=4)
+        )
+
 
     def test_swipeNorth(self):
         """
@@ -57,6 +78,7 @@ class GameControllerTestCase(unittest.TestCase):
         """
         game_field = GameField.basic_field(self.tile_collection)
         game_controller = GameController(game_field, self.tile_collection)
+        game_controller._random.seed(1337)
 
         # set up field:
         game_field.field_data[0][0].tile = self.tile_collection.get_tile('value', value=2)
@@ -111,4 +133,9 @@ class GameControllerTestCase(unittest.TestCase):
         self.assertEqual(
             self.tile_collection.get_tile('value', value=32),
             game_field.field_data[0][2]._tile
+        )
+        # One Tile is randomly inserted after swiping
+        self.assertEqual(
+            self.tile_collection.get_tile('value', value=4),
+            game_field.field_data[2][3].tile
         )
