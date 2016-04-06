@@ -1,7 +1,8 @@
 from typing import Iterable
+import random
 
 from gamefield.gamefield import GameField
-from gamefield.tile import Tile
+from gamefield.tile import Tile, EmptyTile
 from gamefield.tilecollection import TileCollection
 from gamefield.tilecontainer import TileContainer
 
@@ -10,6 +11,34 @@ class GameController(object):
     def __init__(self, game_field: GameField, tile_collection: TileCollection):
         self.game_field = game_field
         self.tile_collection = tile_collection
+        self._random = random.Random()
+
+    def initialize(self) -> None:
+        """
+        Initializes the GameField with two random Tiles.
+        """
+        self._add_random_tile()
+        self._add_random_tile()
+
+    def _add_random_tile(self) -> None:
+        """
+        Adds a random ValueTile with value 2 or 4 to the GameField.
+        """
+        empty_containers = [
+            container
+            for col in self.game_field.field_data
+            for container in col
+            if container.tile == self.tile_collection.get_tile('empty')
+            ]
+        if len(empty_containers) == 0:
+            raise Exception('Field is full, no new Tile can be added.')
+        chosen_container = self._random.choice(empty_containers)
+
+        assert(isinstance(chosen_container.tile, EmptyTile))
+        chosen_container.tile = self._random.choice(
+            [self.tile_collection.get_tile('value', value=2) for i in range(4)] +
+            [self.tile_collection.get_tile('value', value=4)]
+        )
 
     def swipe_north_action(self) -> None:
         self._swipe(self.game_field.get_north_iterator())
@@ -51,6 +80,11 @@ class GameController(object):
                         source_tile.tile = self.tile_collection.get_tile('empty')
                         target_tile.fused = True
                     break
+        # and finally add a new random tile
+        try:
+            self._add_random_tile()
+        except Exception as e:
+            pass  # TODO: real exception handling
 
     @staticmethod
     def _moveable(source_tile: Tile, target_tile: Tile) -> bool:
