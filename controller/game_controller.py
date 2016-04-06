@@ -5,6 +5,7 @@ from gamefield.gamefield import GameField
 from gamefield.tile import Tile, EmptyTile
 from gamefield.tilecollection import TileCollection
 from gamefield.tilecontainer import TileContainer
+from exceptions import GameNotInitializedError
 
 
 class GameController(object):
@@ -12,6 +13,13 @@ class GameController(object):
         self.game_field = game_field
         self.tile_collection = tile_collection
         self._random = random.Random()
+        self._score = None
+
+    @property
+    def score(self):
+        if self._score is None:
+            raise GameNotInitializedError()
+        return self._score
 
     def initialize(self) -> None:
         """
@@ -19,6 +27,7 @@ class GameController(object):
         """
         self._add_random_tile()
         self._add_random_tile()
+        self._score = 0
 
     def _add_random_tile(self) -> None:
         """
