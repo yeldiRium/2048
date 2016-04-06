@@ -8,3 +8,7 @@ class GameLostError(Exception):
 
 class InvalidActionError(Exception):
     pass
+
+
+class NoEmptyContainerError(Exception):
+    pass

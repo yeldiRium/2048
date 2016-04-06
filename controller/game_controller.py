@@ -5,7 +5,8 @@ from gamefield.gamefield import GameField
 from gamefield.tile import Tile, EmptyTile
 from gamefield.tilecollection import TileCollection
 from gamefield.tilecontainer import TileContainer
-from exceptions import GameNotInitializedError
+from exceptions import GameNotInitializedError, InvalidActionError, \
+    NoEmptyContainerError, GameLostError
 
 
 class GameController(object):
@@ -40,7 +41,7 @@ class GameController(object):
             if container.tile == self.tile_collection.get_tile('empty')
             ]
         if len(empty_containers) == 0:
-            raise Exception('Field is full, no new Tile can be added.')
+            raise NoEmptyContainerError()
         chosen_container = self._random.choice(empty_containers)
 
         assert(isinstance(chosen_container.tile, EmptyTile))
@@ -67,6 +68,7 @@ class GameController(object):
         """
         # store the current score to add the fuse_score to it, if one is created
         score = self._score or 0
+        gamefield_changed = False
         # iterate over the iterator and move/fuse the Tiles.
         for tile_path in field_iterator:  # type: Iterable[TileContainer]
             path_list = list(tile_path)
@@ -78,6 +80,7 @@ class GameController(object):
                     # when we move a tile, we need to move on with the container
                     # too, to keep it in focus
                     source_tile = target_tile
+                    gamefield_changed = True
                 else:
                     if GameController._fuseable(source_tile.tile, target_tile.tile):
                         target_tile.tile, fuse_score = self.tile_collection.fuse(
@@ -87,12 +90,12 @@ class GameController(object):
                         source_tile.tile = self.tile_collection.get_tile('empty')
                         target_tile.fused = True
                         score += fuse_score
+                        gamefield_changed = True
                     break
-        # and finally add a new random tile
-        try:
-            self._add_random_tile()
-        except Exception as e:
-            pass  # TODO: real exception handling
+        # if the GameField has not changed during the action, it was an invalid
+        # action
+        if gamefield_changed is False:
+            raise InvalidActionError()
 
         # reset the fused status of each TileContainer:
         for col in self.game_field.field_data:
@@ -101,6 +104,16 @@ class GameController(object):
 
         if self._score is not None:
             self._score = score
+
+        try:
+            # finally add a new random tile
+            # raises exception if there is no space left
+            self._add_random_tile()
+        except NoEmptyContainerError:
+            # since there is no space left, maybe the game is lost. check for it
+            if self.is_lost:
+                raise GameLostError()
+
         return self._score or score
 
     @staticmethod
@@ -112,3 +125,11 @@ class GameController(object):
     def _fuseable(source_tile: Tile, target_tile: Tile) -> bool:
         return source_tile.can_fuse_with(target_tile) \
                and target_tile.can_accept_fusion_with(source_tile)
+
+    @property
+    def is_lost(self) -> bool:
+        """
+        Returns True if there is no possible action left to take.
+        """
+        # TODO: implement test for lost game
+        pass
