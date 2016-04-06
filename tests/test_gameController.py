@@ -3,6 +3,7 @@ from unittest.mock import create_autospec
 from controller.game_controller import GameController
 from gamefield.gamefield import GameField
 from gamefield.tilecollection import TileCollection
+from exceptions import GameNotInitializedError
 
 
 class GameControllerTestCase(unittest.TestCase):
@@ -139,3 +140,49 @@ class GameControllerTestCase(unittest.TestCase):
             self.tile_collection.get_tile('value', value=4),
             game_field.field_data[2][3].tile
         )
+
+    def test_scorekeeping(self) -> None:
+        """
+        Tests, that swipes return the resulting score and score is accessible.
+        The Score numbers are based on the random seed and thus are equal every
+        time the Test is run.
+        """
+        self.game_field = GameField.basic_field(self.tile_collection)
+        self.game_controller = GameController(
+            self.game_field,
+            self.tile_collection
+        )
+        with self.assertRaises(GameNotInitializedError):
+            score = self.game_controller.score
+        self.game_controller.initialize()
+
+        # TODO: fit asserts to seeded results
+        self.assertEqual(
+            4,
+            self.game_controller.swipe_east_action()
+        )
+        self.assertEqual(
+            8,
+            self.game_controller.swipe_south_action()
+        )
+        self.assertEqual(
+            16,
+            self.game_controller.swipe_east_action()
+        )
+        self.assertEqual(16, self.game_controller.score)
+
+    def test_initialization_enables_score(self):
+        """
+        Tests, that calling GameController.initialize() allows to acces GameCon-
+        troller.score afterwards. Before, it raises a GameNotInitializedError.
+        """
+        self.game_field = GameField.basic_field(self.tile_collection)
+        self.game_controller = GameController(
+            self.game_field,
+            self.tile_collection
+        )
+
+        with self.assertRaises(GameNotInitializedError):
+            score = self.game_controller.score
+        self.game_controller.initialize()
+        self.assertEqual(0, self.game_controller.score)
