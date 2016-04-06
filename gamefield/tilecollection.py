@@ -32,3 +32,16 @@ class TileCollection(object):
             return ValueTile(value=kwargs['value'])
         else:
             raise Exception('Given tile name \'' + tile_name + '\' is invalid.')
+
+    def fuse(self, source_tile: ValueTile, target_tile: ValueTile):
+        """
+        Fuses two ValueTiles to a ValueTile with the sum of their values.
+        Raises exceptions for Tiles that are not ValueTiles.
+        """
+        if not isinstance(source_tile, ValueTile) \
+                or not isinstance(target_tile, ValueTile):
+            raise Exception('Only ValueTiles can be fused!')
+        return self.get_tile(
+            'value',
+            value=(source_tile.value + target_tile.value)
+        )
