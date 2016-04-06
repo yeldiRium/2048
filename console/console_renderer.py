@@ -6,7 +6,8 @@ from renderer.renderer import Renderer
 
 
 class ConsoleRenderer(Renderer):
-    def render(self, game_field: GameField):
+    def render(self, game_field: GameField, score: int):
+        print('score: ' + str(score))
         output = defaultdict(str)
         for col in game_field.field_data:
             for i, tile_container in enumerate(col):

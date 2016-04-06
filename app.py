@@ -41,7 +41,7 @@ class App(object):
         runlimit_not_reached_yet = max_prompts > self.prompt_counter
 
         # render once before everything starts, so the initial field can be seen
-        self.renderer.render(self.game_field)
+        self.renderer.render(self.game_field, self.game_controller.score)
 
         while run_indefinitely or runlimit_not_reached_yet:
             user_input = self.input.getline('Wohin swipen? n/e/s/w | q for exit\n')
@@ -64,7 +64,7 @@ class App(object):
                 else:
                     exit()
             # render again after input and calculation
-            self.renderer.render(self.game_field)
+            self.renderer.render(self.game_field, self.game_controller.score)
 
             self.prompt_counter += 1
             runlimit_not_reached_yet = max_prompts > self.prompt_counter
