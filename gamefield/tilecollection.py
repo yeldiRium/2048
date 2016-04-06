@@ -1,4 +1,4 @@
-from gamefield.tile import Tile, EmptyTile, BlockingTile
+from gamefield.tile import Tile, EmptyTile, BlockingTile, ValueTile
 
 
 class TileCollection(object):
@@ -15,7 +15,7 @@ class TileCollection(object):
         identifier = (str(tile_name), str(args), str(kwargs))
         if identifier not in self.tile_storage:
             self.tile_storage[identifier] = \
-                TileCollection._new_tile(tile_name, args, kwargs)
+                TileCollection._new_tile(tile_name, *args, **kwargs)
 
         return self.tile_storage[identifier]
 
@@ -28,5 +28,7 @@ class TileCollection(object):
             return EmptyTile()
         elif tile_name == 'blocking':
             return BlockingTile()
+        elif tile_name == 'value':
+            return ValueTile(value=kwargs['value'])
         else:
             raise Exception('Given tile name \'' + tile_name + '\' is invalid.')

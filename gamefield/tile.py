@@ -86,3 +86,43 @@ class BlockingTile(Tile):
         Nothing can be fused onto a BlockingTile.
         """
         return False
+
+
+class ValueTile(Tile):
+    def __init__(self, value: int = 2) -> None:
+        super().__init__()
+        self.value = value
+
+    def can_move_to(self, tile: 'Tile') -> bool:
+        """
+        ValueTiles are simple tiles that underlie the usual physical rules and
+        can thus be moved onto everything that want to be moved on.
+        """
+        return tile.can_be_replaced_with(self)
+
+    def can_be_replaced_with(self, tile: 'Tile') -> bool:
+        """
+        Are simple tiles that take up space and thus other tiles can't be moved
+        onto them.
+        """
+        return False
+
+    def can_fuse_with(self, tile: 'Tile') -> bool:
+        """
+        ValueTiles only fuse with ValueTiles and only then, if they have the
+        same value.
+        """
+        if isinstance(tile, ValueTile):
+            return self.value == tile.value
+        else:
+            return False
+
+    def can_accept_fusion_with(self, tile: 'Tile') -> bool:
+        """
+        ValueTiles only fuse with ValueTiles and only then, if they have the
+        same value.
+        """
+        if isinstance(tile, ValueTile):
+            return self.value == tile.value
+        else:
+            return False
