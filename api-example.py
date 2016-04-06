@@ -1,7 +1,8 @@
 from controller.game_controller import GameController
 from gamefield.gamefield import GameField
 from gamefield.tilecollection import TileCollection
-from exceptions import GameLostError, InvalidActionError
+from exceptions import GameLostError, InvalidActionError, \
+    GameNotInitializedError
 
 tile_collection = TileCollection()
 game_field = GameField.basic_field(tile_collection)
