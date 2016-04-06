@@ -5,7 +5,6 @@ from gamefield.tilecontainer import TileContainer
 
 
 class GameField(object):
-    # TODO: Iterators currently only work for the BasicField (4x4).
     @staticmethod
     def basic_field(tile_collection: TileCollection) -> 'GameField':
         return GameField(tile_collection)
@@ -16,6 +15,8 @@ class GameField(object):
             width: int = 4,
             height: int = 4
     ):
+        self._width = width
+        self._height = height
         self.field_data = \
             [
                 [TileContainer.empty(tile_collection) for _ in range(height)]
@@ -26,7 +27,7 @@ class GameField(object):
         """
         Creates an Iterator that iterates over TileContainers for calculation of
         a northward swipe.
-        Iteration looks like this:
+        Iteration looks like this: (for 4x4)
          0-> 1-> 2-> 3
                ∨
          4-> 5-> 6-> 7
@@ -37,13 +38,13 @@ class GameField(object):
         Each of the elements is itself an iterator going the elements column up-
         wards.
         """
-        return ((self.field_data[i % 4][int(i / 4) - j] for j in range(int(i / 4) + 1)) for i in range(16))
+        return ((self.field_data[i % self._width][int(i / self._width) - j] for j in range(int(i / self._width) + 1)) for i in range(self._width * self._height))
 
     def get_east_iterator(self) -> Iterable[Iterable[TileContainer]]:
         """
         Creates an Iterator that iterates over TileContainers for calculation of
         an eastward swipe.
-        Iteration looks like this:
+        Iteration looks like this: (for 4x4)
         12  8  4  0
          ∨  ∨  ∨  ∨
         13  9  5  1
@@ -54,13 +55,13 @@ class GameField(object):
         Each of the elements is itself an iterator going the elements row right-
         wards.
         """
-        return ((self.field_data[3 - int(i / 4) + j][i % 4] for j in range(int(i / 4) + 1)) for i in range(16))
+        return ((self.field_data[self._width - 1 - int(i / self._width) + j][i % self._width] for j in range(int(i / self._width) + 1)) for i in range(self._width * self._height))
 
     def get_south_iterator(self) -> Iterable[Iterable[TileContainer]]:
         """
         Creates an Iterator that iterates over TileContainers for calculation of
         a southward swipe.
-        Iteration looks like this:
+        Iteration looks like this: (for 4x4)
         12->13->14->15
                ∧
          8-> 9->10->11
@@ -71,13 +72,13 @@ class GameField(object):
         Each of the elements is itself an iterator going the elements column
         downwards.
         """
-        return ((self.field_data[i % 4][3 - int(i / 4) + j] for j in range(int(i / 4) + 1)) for i in range(16))
+        return ((self.field_data[i % self._width][self._width - 1 - int(i / self._width) + j] for j in range(int(i / self._width) + 1)) for i in range(self._width * self._height))
 
     def get_west_iterator(self) -> Iterable[Iterable[TileContainer]]:
         """
         Creates an Iterator that iterates over TileContainers for calculation of
         an westward swipe.
-        Iteration looks like this:
+        Iteration looks like this: (for 4x4)
          0  4  8 12
          ∧  ∧  ∧  ∧
          1  5  9 13
@@ -88,4 +89,4 @@ class GameField(object):
         Each of the elements is itself an iterator going the elements row left-
         wards.
         """
-        return ((self.field_data[int(i / 4) - j][i % 4] for j in range(int(i / 4) + 1)) for i in range(16))
+        return ((self.field_data[int(i / self._width) - j][i % self._width] for j in range(int(i / self._width) + 1)) for i in range(self._width * self._height))
