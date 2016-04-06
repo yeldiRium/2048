@@ -12,6 +12,9 @@ class EmptyTileTestCase(unittest.TestCase):
         self.blocking_tile = self.tile_collection.get_tile('blocking')
         self.value_tile = self.tile_collection.get_tile('value', value=4)
 
+    def test_to_str(self):
+        self.assertEqual(' ', str(self.test_tile))
+
     def test_movingToEmptyTile(self):
         self.assertTrue(self.test_tile.can_be_replaced_with(self.empty_tile))
         self.assertTrue(self.test_tile.can_be_replaced_with(self.blocking_tile))
@@ -40,6 +43,9 @@ class BlockingTileTestCase(unittest.TestCase):
         self.empty_tile = self.tile_collection.get_tile('empty')
         self.blocking_tile = self.test_tile
         self.value_tile = self.tile_collection.get_tile('value', value=4)
+
+    def test_to_str(self):
+        self.assertEqual('x', str(self.test_tile))
 
     def test_movingToBlockingTile(self):
         self.assertFalse(self.test_tile.can_be_replaced_with(self.empty_tile))
@@ -70,6 +76,9 @@ class ValueTileTestCase(unittest.TestCase):
         self.blocking_tile = self.tile_collection.get_tile('blocking')
         self.fitting_value_tile = self.test_tile
         self.unfitting_value_tile = self.tile_collection.get_tile('value', value=4)
+
+    def test_to_str(self):
+        self.assertEqual('2', str(self.test_tile))
 
     def test_movingToValueTile(self):
         self.assertFalse(self.test_tile.can_be_replaced_with(self.empty_tile))
