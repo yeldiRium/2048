@@ -3,6 +3,10 @@ from abc import ABCMeta, abstractmethod
 
 class Tile(metaclass=ABCMeta):
     @abstractmethod
+    def __str__(self):
+        pass
+
+    @abstractmethod
     def can_move_to(self, tile: 'Tile') -> bool:
         """
         True, if self can move onto the given tile.
@@ -33,6 +37,9 @@ class Tile(metaclass=ABCMeta):
 
 
 class EmptyTile(Tile):
+    def __str__(self):
+        return ' '
+
     def can_move_to(self, tile: 'Tile') -> bool:
         """
         Since EmptryTiles don't represent anything other than nothing, it is
@@ -61,6 +68,9 @@ class EmptyTile(Tile):
 
 
 class BlockingTile(Tile):
+    def __str__(self):
+        return 'x'
+
     def can_move_to(self, tile: 'Tile') -> bool:
         """
         BlockingTiles are simple tiles that underlie the usual physical rules
@@ -92,6 +102,9 @@ class ValueTile(Tile):
     def __init__(self, value: int = 2) -> None:
         super().__init__()
         self.value = value
+
+    def __str__(self):
+        return str(self.value)
 
     def can_move_to(self, tile: 'Tile') -> bool:
         """
