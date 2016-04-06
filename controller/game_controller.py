@@ -56,11 +56,7 @@ class GameController(object):
         """
         Traverses a given Iterator and moves/fueses Tiles accordingly.
         """
-        # first reset the fused status of each TileContainer:
-        for col in self.game_field.field_data:
-            for tile_container in col:
-                tile_container.fused = False
-        # then iterate over the iterator and move/fuse the Tiles.
+        # iterate over the iterator and move/fuse the Tiles.
         for tile_path in field_iterator:  # type: Iterable[TileContainer]
             path_list = list(tile_path)
             source_tile = path_list[0]  # type: TileContainer
@@ -85,6 +81,11 @@ class GameController(object):
             self._add_random_tile()
         except Exception as e:
             pass  # TODO: real exception handling
+
+        # reset the fused status of each TileContainer:
+        for col in self.game_field.field_data:
+            for tile_container in col:
+                tile_container.fused = False
 
     @staticmethod
     def _moveable(source_tile: Tile, target_tile: Tile) -> bool:
