@@ -7,8 +7,9 @@ from gamefield.tilecollection import TileCollection
 
 class GameControllerTestCase(unittest.TestCase):
     def setUp(self):
+        self.tile_collection = TileCollection()
         self.game_field = create_autospec(GameField)
-        self.game_controller = GameController(self.game_field)
+        self.game_controller = GameController(self.game_field, self.tile_collection)
 
     def test_swipeNorth(self):
         """
@@ -53,60 +54,59 @@ class GameControllerTestCase(unittest.TestCase):
         32  x  x  x
          x  x  x  x
         """
-        tile_collection = TileCollection()
-        game_field = GameField.basic_field(tile_collection)
+        game_field = GameField.basic_field(self.tile_collection)
 
         # set up field:
-        game_field.field_data[0][0] = tile_collection.get_tile('value', 2)
-        game_field.field_data[3][0] = tile_collection.get_tile('value', 4)
-        game_field.field_data[0][1] = tile_collection.get_tile('value', 2)
-        game_field.field_data[1][1] = tile_collection.get_tile('value', 4)
-        game_field.field_data[2][1] = tile_collection.get_tile('value', 8)
-        game_field.field_data[3][1] = tile_collection.get_tile('value', 4)
-        game_field.field_data[0][2] = tile_collection.get_tile('value', 4)
-        game_field.field_data[1][2] = tile_collection.get_tile('value', 4)
-        game_field.field_data[2][2] = tile_collection.get_tile('value', 2)
-        game_field.field_data[3][2] = tile_collection.get_tile('value', 4)
-        game_field.field_data[0][3] = tile_collection.get_tile('value', 32)
-        game_field.field_data[1][3] = tile_collection.get_tile('value', 16)
-        game_field.field_data[2][3] = tile_collection.get_tile('value', 2)
-        game_field.field_data[3][3] = tile_collection.get_tile('value', 4)
+        game_field.field_data[0][0] = self.tile_collection.get_tile('value', value=2)
+        game_field.field_data[3][0] = self.tile_collection.get_tile('value', value=4)
+        game_field.field_data[0][1] = self.tile_collection.get_tile('value', value=2)
+        game_field.field_data[1][1] = self.tile_collection.get_tile('value', value=4)
+        game_field.field_data[2][1] = self.tile_collection.get_tile('value', value=8)
+        game_field.field_data[3][1] = self.tile_collection.get_tile('value', value=4)
+        game_field.field_data[0][2] = self.tile_collection.get_tile('value', value=4)
+        game_field.field_data[1][2] = self.tile_collection.get_tile('value', value=4)
+        game_field.field_data[2][2] = self.tile_collection.get_tile('value', value=2)
+        game_field.field_data[3][2] = self.tile_collection.get_tile('value', value=4)
+        game_field.field_data[0][3] = self.tile_collection.get_tile('value', value=32)
+        game_field.field_data[1][3] = self.tile_collection.get_tile('value', value=16)
+        game_field.field_data[2][3] = self.tile_collection.get_tile('value', value=2)
+        game_field.field_data[3][3] = self.tile_collection.get_tile('value', value=4)
 
         self.game_controller.swipe_north_action()
 
         self.assertEqual(
-            tile_collection.get_tile('value', 4),
+            self.tile_collection.get_tile('value', value=4),
             game_field.field_data[0][0]
         )
         self.assertEqual(
-            tile_collection.get_tile('value', 8),
+            self.tile_collection.get_tile('value', value=8),
             game_field.field_data[1][0]
         )
         self.assertEqual(
-            tile_collection.get_tile('value', 8),
+            self.tile_collection.get_tile('value', value=8),
             game_field.field_data[2][0]
         )
         self.assertEqual(
-            tile_collection.get_tile('value', 8),
+            self.tile_collection.get_tile('value', value=8),
             game_field.field_data[3][0]
         )
         self.assertEqual(
-            tile_collection.get_tile('value', 4),
+            self.tile_collection.get_tile('value', value=4),
             game_field.field_data[0][1]
         )
         self.assertEqual(
-            tile_collection.get_tile('value', 16),
+            self.tile_collection.get_tile('value', value=16),
             game_field.field_data[1][1]
         )
         self.assertEqual(
-            tile_collection.get_tile('value', 4),
+            self.tile_collection.get_tile('value', value=4),
             game_field.field_data[2][1]
         )
         self.assertEqual(
-            tile_collection.get_tile('value', 8),
+            self.tile_collection.get_tile('value', value=8),
             game_field.field_data[3][1]
         )
         self.assertEqual(
-            tile_collection.get_tile('value', 32),
+            self.tile_collection.get_tile('value', value=32),
             game_field.field_data[1][2]
         )
