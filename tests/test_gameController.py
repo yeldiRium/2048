@@ -3,7 +3,8 @@ from unittest.mock import create_autospec
 from controller.game_controller import GameController
 from gamefield.gamefield import GameField
 from gamefield.tilecollection import TileCollection
-from exceptions import GameNotInitializedError
+from exceptions import GameNotInitializedError, InvalidActionError, \
+    GameLostError
 
 
 class GameControllerTestCase(unittest.TestCase):
@@ -200,3 +201,40 @@ class GameControllerTestCase(unittest.TestCase):
             score = self.game_controller.score
         self.game_controller.initialize()
         self.assertEqual(0, self.game_controller.score)
+
+    def test_invalid_action_error(self):
+        """
+        Tests that an InvalidActionError is raised when an action is issued that
+        can't be executed.
+
+        This test is very rough but should work.
+        """
+        self.game_controller.initialize()
+
+        with self.assertRaises(InvalidActionError):
+            for i in range(100):
+                self.game_controller.swipe_east_action()
+
+    def test_game_lost_error(self):
+        """
+        Tests that a GameLostError is raised when an action is issued but no
+        action can be executed anymore.
+
+        This test is very rough but should work.
+        """
+        self.game_controller.initialize()
+
+        with self.assertRaises(GameLostError):
+            for i in range(100):
+                for j in range(100):
+                    try:
+                        if i % 4 == 0:
+                            self.game_controller.swipe_north_action()
+                        elif i % 4 == 1:
+                            self.game_controller.swipe_east_action()
+                        elif i % 4 == 2:
+                            self.game_controller.swipe_south_action()
+                        elif i % 4 == 3:
+                            self.game_controller.swipe_west_action()
+                    except InvalidActionError as e:
+                        break
