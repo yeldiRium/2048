@@ -51,16 +51,16 @@ class App(object):
             else:
                 if user_input == 'n':
                     self.output.write("swiping north")
-                    #self.game_controller.swipeNorthAction()
+                    self.game_controller.swipe_north_action()
                 elif user_input == 'e':
                     self.output.write("swiping east")
-                    #self.game_controller.swipeEastAction()
+                    self.game_controller.swipe_east_action()
                 elif user_input == 's':
                     self.output.write("swiping south")
-                    #self.game_controller.swipeSouthAction()
+                    self.game_controller.swipe_south_action()
                 elif user_input == 'w':
                     self.output.write("swiping west")
-                    #self.game_controller.swipeWestAction()
+                    self.game_controller.swipe_west_action()
                 else:
                     exit()
             # render again after input and calculation
