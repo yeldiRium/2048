@@ -49,22 +49,24 @@ class GameController(object):
             [self.tile_collection.get_tile('value', value=4)]
         )
 
-    def swipe_north_action(self) -> None:
-        self._swipe(self.game_field.get_north_iterator())
+    def swipe_north_action(self) -> int:
+        return self._swipe(self.game_field.get_north_iterator())
 
-    def swipe_east_action(self) -> None:
-        self._swipe(self.game_field.get_east_iterator())
+    def swipe_east_action(self) -> int:
+        return self._swipe(self.game_field.get_east_iterator())
 
-    def swipe_south_action(self) -> None:
-        self._swipe(self.game_field.get_south_iterator())
+    def swipe_south_action(self) -> int:
+        return self._swipe(self.game_field.get_south_iterator())
 
-    def swipe_west_action(self) -> None:
-        self._swipe(self.game_field.get_west_iterator())
+    def swipe_west_action(self) -> int:
+        return self._swipe(self.game_field.get_west_iterator())
 
-    def _swipe(self, field_iterator: Iterable[Iterable[TileContainer]]) -> None:
+    def _swipe(self, field_iterator: Iterable[Iterable[TileContainer]]) -> int:
         """
         Traverses a given Iterator and moves/fueses Tiles accordingly.
         """
+        # store the current score to add the fuse_score to it, if one is created
+        score = self._score or 0
         # iterate over the iterator and move/fuse the Tiles.
         for tile_path in field_iterator:  # type: Iterable[TileContainer]
             path_list = list(tile_path)
@@ -78,12 +80,13 @@ class GameController(object):
                     source_tile = target_tile
                 else:
                     if GameController._fuseable(source_tile.tile, target_tile.tile):
-                        target_tile.tile = self.tile_collection.fuse(
+                        target_tile.tile, fuse_score = self.tile_collection.fuse(
                             source_tile.tile,
                             target_tile.tile
                         )
                         source_tile.tile = self.tile_collection.get_tile('empty')
                         target_tile.fused = True
+                        score += fuse_score
                     break
         # and finally add a new random tile
         try:
@@ -95,6 +98,10 @@ class GameController(object):
         for col in self.game_field.field_data:
             for tile_container in col:
                 tile_container.fused = False
+
+        if self._score is not None:
+            self._score = score
+        return self._score or score
 
     @staticmethod
     def _moveable(source_tile: Tile, target_tile: Tile) -> bool:
