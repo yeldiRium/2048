@@ -52,11 +52,11 @@ class TileCollectionTestCase(unittest.TestCase):
 
     def test_fuse(self):
         """
-        Tests that fusing two value tiles returns a value tile with their sum as
-        its value.
+        Tests that fusing two value tiles returns a ValueTile with their sum as
+        its value and the resulting score.
         """
         self.assertEqual(
-            self.tile_collection.get_tile('value',  value=32),
+            (self.tile_collection.get_tile('value',  value=32), 32),
             self.tile_collection.fuse(
                 self.tile_collection.get_tile('value',  value=16),
                 self.tile_collection.get_tile('value',  value=16)
@@ -65,7 +65,7 @@ class TileCollectionTestCase(unittest.TestCase):
         # this is technically illegal in the game, but works for engine purpo-
         # ses:
         self.assertEqual(
-            self.tile_collection.get_tile('value',  value=12),
+            (self.tile_collection.get_tile('value',  value=12), 12),
             self.tile_collection.fuse(
                 self.tile_collection.get_tile('value',  value=4),
                 self.tile_collection.get_tile('value',  value=8)
