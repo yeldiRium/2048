@@ -38,6 +38,7 @@ class BasicGameFieldTestCase(unittest.TestCase):
         for i, tile_path in enumerate(field_iterator):
             for j, target_tile in enumerate(tile_path):
                 self.assertEqual(target_tile, self.game_field.field_data[i % 4][int(i / 4) - j])
+                self.assertIsInstance(target_tile, TileContainer)
 
     def test_eastIterator(self):
         """
@@ -48,6 +49,7 @@ class BasicGameFieldTestCase(unittest.TestCase):
         for i, tile_path in enumerate(field_iterator):
             for j, target_tile in enumerate(tile_path):
                 self.assertEqual(target_tile, self.game_field.field_data[3 - int(i / 4) + j][i % 4])
+                self.assertIsInstance(target_tile, TileContainer)
 
     def test_southIterator(self):
         """
@@ -58,6 +60,7 @@ class BasicGameFieldTestCase(unittest.TestCase):
         for i, tile_path in enumerate(field_iterator):
             for j, target_tile in enumerate(tile_path):
                 self.assertEqual(target_tile, self.game_field.field_data[i % 4][3 - int(i / 4) + j])
+                self.assertIsInstance(target_tile, TileContainer)
 
     def test_westIterator(self):
         """
@@ -68,3 +71,4 @@ class BasicGameFieldTestCase(unittest.TestCase):
         for i, tile_path in enumerate(field_iterator):
             for j, target_tile in enumerate(tile_path):
                 self.assertEqual(target_tile, self.game_field.field_data[int(i / 4) - j][i % 4])
+                self.assertIsInstance(target_tile, TileContainer)
