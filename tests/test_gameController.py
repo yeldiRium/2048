@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import create_autospec
+from unittest.mock import create_autospec, MagicMock
 from controller.game_controller import GameController
 from gamefield.gamefield import GameField
 from gamefield.tilecollection import TileCollection
@@ -30,7 +30,6 @@ class GameControllerTestCase(unittest.TestCase):
             self.tile_collection.get_tile('value', value=4)
         )
 
-
     def test_swipeNorth(self):
         """
         Test that issueing a swipeNorthAction uses the north-ward iterator.
@@ -39,8 +38,10 @@ class GameControllerTestCase(unittest.TestCase):
         self.game_field.field_data = {}
         self.game_controller = GameController(self.game_field, self.tile_collection)
         self.game_controller._random.seed(1337)
+        self.game_controller._swipe = MagicMock()
         self.game_controller.swipe_north_action()
         self.game_field.get_north_iterator.assert_any_call()
+        self.game_controller._swipe.assert_called_with(self.game_field.get_north_iterator())
 
     def test_swipeEast(self):
         """
@@ -50,8 +51,10 @@ class GameControllerTestCase(unittest.TestCase):
         self.game_field.field_data = {}
         self.game_controller = GameController(self.game_field, self.tile_collection)
         self.game_controller._random.seed(1337)
+        self.game_controller._swipe = MagicMock()
         self.game_controller.swipe_east_action()
         self.game_field.get_east_iterator.assert_any_call()
+        self.game_controller._swipe.assert_called_with(self.game_field.get_east_iterator())
 
     def test_swipeSouth(self):
         """
@@ -61,8 +64,10 @@ class GameControllerTestCase(unittest.TestCase):
         self.game_field.field_data = {}
         self.game_controller = GameController(self.game_field, self.tile_collection)
         self.game_controller._random.seed(1337)
+        self.game_controller._swipe = MagicMock()
         self.game_controller.swipe_south_action()
         self.game_field.get_south_iterator.assert_any_call()
+        self.game_controller._swipe.assert_called_with(self.game_field.get_south_iterator())
 
     def test_swipeWest(self):
         """
@@ -72,8 +77,10 @@ class GameControllerTestCase(unittest.TestCase):
         self.game_field.field_data = {}
         self.game_controller = GameController(self.game_field, self.tile_collection)
         self.game_controller._random.seed(1337)
+        self.game_controller._swipe = MagicMock()
         self.game_controller.swipe_west_action()
         self.game_field.get_west_iterator.assert_any_call()
+        self.game_controller._swipe.assert_called_with(self.game_field.get_west_iterator())
 
     def test_swipe(self):
         """
