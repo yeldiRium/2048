@@ -10,5 +10,5 @@ class Renderer(metaclass=ABCMeta):
         self.output_stream = output_stream
 
     @abstractmethod
-    def render(self, game_field: GameField) -> None:
+    def render(self, game_field: GameField, score: int) -> None:
         pass
