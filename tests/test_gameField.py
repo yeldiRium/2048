@@ -1,6 +1,7 @@
 import unittest
 
 from gamefield.gamefield import GameField
+from gamefield.tilecollection import TileCollection
 from gamefield.tilecontainer import TileContainer
 from gamefield.tile import EmptyTile
 
@@ -9,7 +10,8 @@ class BasicGameFieldTestCase(unittest.TestCase):
     def setUp(self):
         # basic_field instantiates a GameField and fills it with TileContainers
         # and empty Tiles
-        self.game_field = GameField.basic_field()
+        self.tile_collection = TileCollection()
+        self.game_field = GameField.basic_field(self.tile_collection)
 
     def test_basicFieldWasConstructedCorrectly(self):
         """

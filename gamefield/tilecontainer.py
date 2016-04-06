@@ -1,14 +1,16 @@
 from gamefield.tile import Tile, EmptyTile, BlockingTile
+from gamefield.tilecollection import TileCollection
 
 
 class TileContainer(object):
-    def __init__(self, tile):
+    def __init__(self, tile: Tile, tile_collection: TileCollection):
+        self._tile_collection = tile_collection
         self._tile = tile
         self.fused = False
 
     @staticmethod
-    def empty() -> 'TileContainer':
-        return TileContainer(EmptyTile())
+    def empty(tile_collection: TileCollection) -> 'TileContainer':
+        return TileContainer(tile_collection.get_tile('empty'), tile_collection)
 
     def fuse(self) -> None:
         if self.fused:
@@ -23,7 +25,7 @@ class TileContainer(object):
     @property
     def tile(self) -> Tile:
         if self.fused:
-            return BlockingTile()
+            return self._tile_collection.get_tile('blocking')
         else:
             return self._tile
 

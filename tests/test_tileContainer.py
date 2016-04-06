@@ -2,13 +2,21 @@ import unittest
 
 from gamefield.tile import EmptyTile
 from gamefield.tile import BlockingTile
+from gamefield.tilecollection import TileCollection
 from gamefield.tilecontainer import TileContainer
 
 
 class TileContainerTestCase(unittest.TestCase):
     def setUp(self):
-        self.empty_tile_container = TileContainer(EmptyTile())
-        self.blocking_tile_container = TileContainer(BlockingTile())
+        self.tile_collection = TileCollection()
+        self.empty_tile_container = TileContainer(
+            self.tile_collection.get_tile('empty'),
+            self.tile_collection
+        )
+        self.blocking_tile_container = TileContainer(
+            self.tile_collection.get_tile('blocking'),
+            self.tile_collection
+        )
         # TODO: add other tiles to containers
 
     def test_tileProperty(self):

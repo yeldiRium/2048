@@ -1,15 +1,26 @@
 from typing import Iterable
+
+from gamefield.tilecollection import TileCollection
 from gamefield.tilecontainer import TileContainer
 
 
 class GameField(object):
     # TODO: Iterators currently only work for the BasicField (4x4).
     @staticmethod
-    def basic_field() -> 'GameField':
-        return GameField()
+    def basic_field(tile_collection: TileCollection) -> 'GameField':
+        return GameField(tile_collection)
 
-    def __init__(self, width: int = 4, height: int = 4):
-        self.field_data = [[TileContainer.empty() for _ in range(height)] for _ in range(width)]
+    def __init__(
+            self,
+            tile_collection: TileCollection,
+            width: int = 4,
+            height: int = 4
+    ):
+        self.field_data = \
+            [
+                [TileContainer.empty(tile_collection) for _ in range(height)]
+                for _ in range(width)
+            ]
 
     def get_north_iterator(self) -> Iterable[Iterable[TileContainer]]:
         """

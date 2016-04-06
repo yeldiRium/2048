@@ -1,14 +1,16 @@
 import unittest
 
 from gamefield.tile import EmptyTile, BlockingTile
+from gamefield.tilecollection import TileCollection
 
 
 class EmptyTileTestCase(unittest.TestCase):
     def setUp(self):
         # TODO: add ValueTile
-        self.test_tile = EmptyTile()
+        self.tile_collection = TileCollection()
+        self.test_tile = self.tile_collection.get_tile('empty')
         self.empty_tile = self.test_tile
-        self.blocking_tile = BlockingTile()
+        self.blocking_tile = self.tile_collection.get_tile('blocking')
 
     def test_movingToEmptyTile(self):
         self.assertTrue(self.test_tile.can_be_replaced_with(self.empty_tile))
@@ -30,8 +32,9 @@ class EmptyTileTestCase(unittest.TestCase):
 class BlockingTileTestCase(unittest.TestCase):
     def setUp(self):
         # TODO : add ValueTile
-        self.test_tile = BlockingTile()
-        self.empty_tile = EmptyTile()
+        self.tile_collection = TileCollection()
+        self.test_tile = self.tile_collection.get_tile('blocking')
+        self.empty_tile = self.tile_collection.get_tile('empty')
         self.blocking_tile = self.test_tile
 
     def test_movingToBlockingTile(self):

@@ -3,6 +3,7 @@ from console.input import ConsoleInput
 from console.output import ConsoleOutput
 from controller.game_controller import GameController
 from gamefield.gamefield import GameField
+from gamefield.tilecollection import TileCollection
 from renderer.renderer import Renderer
 
 
@@ -18,7 +19,8 @@ class App(object):
     ):
         self.input = input_stream
         self.output = output_stream
-        self.game_field = GameField.basic_field()
+        self.tile_collection = TileCollection()
+        self.game_field = GameField.basic_field(self.tile_collection)
         self.game_controller = GameController(self.game_field)
         self.game_controller.initialize()
         self.renderer = ConsoleRenderer(output_stream)  # type: Renderer
