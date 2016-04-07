@@ -231,17 +231,16 @@ class GameControllerTestCase(unittest.TestCase):
         """
         self.game_controller.initialize()
 
+        # fill the GameField in a checkers mannern with value twos/fours, so
+        # that they can't be fused with each other.
+        for x in range(4):
+            for y in range(4):
+                if x % 2 == y % 2:
+                    self.game_field.field_data[x][y].tile = \
+                        self.tile_collection.get_tile('value', value=2)
+                else:
+                    self.game_field.field_data[x][y].tile = \
+                        self.tile_collection.get_tile('value', value=4)
+
         with self.assertRaises(GameLostError):
-            for i in range(100):
-                for j in range(100):
-                    try:
-                        if i % 4 == 0:
-                            self.game_controller.swipe_north_action()
-                        elif i % 4 == 1:
-                            self.game_controller.swipe_east_action()
-                        elif i % 4 == 2:
-                            self.game_controller.swipe_south_action()
-                        elif i % 4 == 3:
-                            self.game_controller.swipe_west_action()
-                    except InvalidActionError as e:
-                        break
+            self.game_controller.swipe_north_action()
