@@ -2,6 +2,7 @@ from console.console_renderer import ConsoleRenderer
 from console.input import ConsoleInput
 from console.output import ConsoleOutput
 from controller.game_controller import GameController
+from exceptions import InvalidActionError, GameLostError
 from gamefield.gamefield import GameField
 from gamefield.tilecollection import TileCollection
 from renderer.renderer import Renderer
@@ -49,20 +50,27 @@ class App(object):
                 self.output.write('Ungültiger Input, bitte wiederholen.')
                 continue
             else:
-                if user_input == 'n':
-                    self.output.write("swiping north")
-                    self.game_controller.swipe_north_action()
-                elif user_input == 'e':
-                    self.output.write("swiping east")
-                    self.game_controller.swipe_east_action()
-                elif user_input == 's':
-                    self.output.write("swiping south")
-                    self.game_controller.swipe_south_action()
-                elif user_input == 'w':
-                    self.output.write("swiping west")
-                    self.game_controller.swipe_west_action()
-                else:
-                    exit()
+                try:
+                    if user_input == 'n':
+                        self.output.write("swiping north")
+                        self.game_controller.swipe_north_action()
+                    elif user_input == 'e':
+                        self.output.write("swiping east")
+                        self.game_controller.swipe_east_action()
+                    elif user_input == 's':
+                        self.output.write("swiping south")
+                        self.game_controller.swipe_south_action()
+                    elif user_input == 'w':
+                        self.output.write("swiping west")
+                        self.game_controller.swipe_west_action()
+                    else:
+                        exit()
+                except (GameLostError, InvalidActionError) as e:
+                    if isinstance(e, GameLostError):
+                        print("sorry, you lost the game!")
+                        exit()
+                    else:
+                        print("that move was invalid. try again!")
             # render again after input and calculation
             self.renderer.render(self.game_field, self.game_controller.score)
 
