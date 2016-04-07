@@ -6,7 +6,6 @@ from gamefield.tilecollection import TileCollection
 
 class TileCollectionTestCase(unittest.TestCase):
     def setUp(self):
-        # TODO: add ValueTile
         self.tile_collection = TileCollection()
 
     def test_lazyLoading(self):
@@ -32,6 +31,18 @@ class TileCollectionTestCase(unittest.TestCase):
             self.tile_collection.get_tile('blocking'),
             self.tile_collection.get_tile('blocking')
         )
+        self.assertEqual(
+            self.tile_collection.get_tile('value', value=2),
+            self.tile_collection.get_tile('value', value=2)
+        )
+        self.assertEqual(
+            self.tile_collection.get_tile('value', value=4),
+            self.tile_collection.get_tile('value', value=4)
+        )
+        self.assertNotEqual(
+            self.tile_collection.get_tile('value', value=2),
+            self.tile_collection.get_tile('value', value=4)
+        )
 
     def test_tileTypes(self):
         """
@@ -44,6 +55,10 @@ class TileCollectionTestCase(unittest.TestCase):
         self.assertIsInstance(
             self.tile_collection.get_tile('blocking'),
             BlockingTile
+        )
+        self.assertIsInstance(
+            self.tile_collection.get_tile('value', value=1),
+            ValueTile
         )
 
     def test_invalidTypeRaisesException(self):
