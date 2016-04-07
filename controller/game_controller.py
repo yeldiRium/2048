@@ -1,6 +1,5 @@
 from typing import Iterable
 import random
-from typing import Tuple
 
 from gamefield.gamefield import GameField
 from gamefield.tile import Tile, EmptyTile

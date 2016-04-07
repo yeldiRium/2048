@@ -1,6 +1,5 @@
 import unittest
 
-from gamefield.tile import EmptyTile, BlockingTile
 from gamefield.tilecollection import TileCollection
 
 

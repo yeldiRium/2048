@@ -1,6 +1,5 @@
 from collections import defaultdict
 
-from console.output import ConsoleOutput
 from gamefield.gamefield import GameField
 from renderer.renderer import Renderer
 

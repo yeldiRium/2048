@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import MagicMock, call, create_autospec
+from unittest.mock import MagicMock, create_autospec
 from app import App
 from renderer.renderer import Renderer
 
