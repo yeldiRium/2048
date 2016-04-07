@@ -7,7 +7,8 @@ from gamefield.tile import Tile, EmptyTile
 from gamefield.tilecollection import TileCollection
 from gamefield.tilecontainer import TileContainer
 from exceptions import GameNotInitializedError, InvalidActionError, \
-    NoEmptyContainerError, GameLostError
+    NoEmptyContainerError, GameLostError, MoveNotAllowedError, \
+    FusionNotAllowedError
 
 
 class GameController(object):
@@ -110,24 +111,22 @@ class GameController(object):
             path_list = list(tile_path)
             source_tile = path_list[0]  # type: TileContainer
             for target_tile in path_list[1:]:  # type: TileContainer
-                if GameController._moveable(source_tile.tile, target_tile.tile):
-                    target_tile.tile = source_tile.tile
-                    source_tile.tile = self.tile_collection.get_tile('empty')
-                    # when we move a tile, we need to move on with the container
-                    # too, to keep it in focus
-                    source_tile = target_tile
+                try:
+                    self._move_tile(source_tile, target_tile)
                     gamefield_changed = True
-                else:
-                    if GameController._fuseable(source_tile.tile, target_tile.tile):
-                        target_tile.tile, fuse_score = self.tile_collection.fuse(
-                            source_tile.tile,
-                            target_tile.tile
-                        )
-                        source_tile.tile = self.tile_collection.get_tile('empty')
-                        target_tile.fused = True
-                        score += fuse_score
+                    # when we move a tile, we need to move on with the container
+                    # too, to keep it in focus:
+                    source_tile = target_tile
+                except MoveNotAllowedError as _:
+                    try:
+                        score += self._fuse_tile(source_tile, target_tile)
                         gamefield_changed = True
-                    break
+                    except FusionNotAllowedError as _:
+                        # after movement was blocked, the current tile can't mo-
+                        # further after trying to fuse, so this is the end for
+                        # this loop
+                        break
+
         # if the GameField has not changed during the action, it was an invalid
         # action
         if gamefield_changed is False:
@@ -142,15 +141,72 @@ class GameController(object):
             # will be determined with the next swipe.
             pass
 
-        # reset the fused status of each TileContainer:
-        for col in self.game_field.field_data:
-            for tile_container in col:
-                tile_container.fused = False
+        self.reset_fused_containers()
 
         if self._score is not None:
             self._score = score
 
         return self._score or score
+
+    def _move_tile(
+            self,
+            source_tile_container: TileContainer,
+            target_tile_container: TileContainer
+    ) -> None:
+        """
+        Moves the source_tile_container's Tile to the target_tile_container.
+        If that is not possible, raises a MoveNotAllowedError.
+        :param source_tile_container:
+        :param target_tile_container:
+        :raises MoveNotAllowedError:
+        :return:
+        """
+        if GameController._moveable(
+                source_tile_container.tile,
+                target_tile_container.tile
+        ):
+            target_tile_container.tile = source_tile_container.tile
+            source_tile_container.tile = self.tile_collection.get_tile('empty')
+        else:
+            raise MoveNotAllowedError()
+
+    def _fuse_tile(
+            self,
+            source_tile_container: TileContainer,
+            target_tile_container: TileContainer
+    ) -> int:
+        """
+        Fuses the source_tile_container's Tile onto the target_tile_container's
+        Tile.
+        If that is not possible, raises FusionNotAllowedError.
+        :param source_tile_container:
+        :param target_tile_container:
+        :raises FusionNotAllowedError:
+        :return:
+        """
+        fuse_score = 0
+        if GameController._fuseable(
+                source_tile_container.tile,
+                target_tile_container.tile
+        ):
+            target_tile_container.tile, fuse_score = self.tile_collection.fuse(
+                source_tile_container.tile,
+                target_tile_container.tile
+            )
+            source_tile_container.tile = self.tile_collection.get_tile('empty')
+            target_tile_container.fused = True
+        else:
+            raise FusionNotAllowedError()
+        return fuse_score
+
+    def reset_fused_containers(self) -> None:
+        """
+        Resets the fused status of each TileContainer:
+        :return:
+        """
+        for col in self.game_field.field_data:
+            for tile_container in col:
+                tile_container.fused = False
 
     @staticmethod
     def _moveable(source_tile: Tile, target_tile: Tile) -> bool:

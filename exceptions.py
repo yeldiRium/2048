@@ -12,3 +12,11 @@ class InvalidActionError(Exception):
 
 class NoEmptyContainerError(Exception):
     pass
+
+
+class MoveNotAllowedError(Exception):
+    pass
+
+
+class FusionNotAllowedError(Exception):
+    pass
