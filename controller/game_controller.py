@@ -11,6 +11,12 @@ from exceptions import GameNotInitializedError, InvalidActionError, \
 
 
 class GameController(object):
+    """
+    The GameController operates on the GameField. The GameController contains
+    the main game logic.
+    It has an api for user input (swipe_*_action) and for returning output to
+    the user (return values, score, is_lost).
+    """
     def __init__(self, game_field: GameField, tile_collection: TileCollection):
         self.game_field = game_field
         self.tile_collection = tile_collection
@@ -19,6 +25,11 @@ class GameController(object):
 
     @property
     def score(self):
+        """
+        Returns the current score of the ongoing game. If the game was not yet
+        initialized, it raises an exception.
+        :return:
+        """
         if self._score is None:
             raise GameNotInitializedError()
         return self._score
@@ -34,6 +45,8 @@ class GameController(object):
     def _add_random_tile(self) -> None:
         """
         Adds a random ValueTile with value 2 or 4 to the GameField.
+        Each free space has the same chance.
+        The value 2 has a chance of 80%, while 4 has 20%.
         """
         empty_containers = [
             container
@@ -52,20 +65,36 @@ class GameController(object):
         )
 
     def swipe_north_action(self) -> int:
+        """
+        Swipes the GameField northwards.
+        :return:
+        """
         return self._swipe(self.game_field.get_north_iterator())
 
     def swipe_east_action(self) -> int:
+        """
+        Swipes the GameField eastwards.
+        :return:
+        """
         return self._swipe(self.game_field.get_east_iterator())
 
     def swipe_south_action(self) -> int:
+        """
+        Swipes the GameField southwards.
+        :return:
+        """
         return self._swipe(self.game_field.get_south_iterator())
 
     def swipe_west_action(self) -> int:
+        """
+        Swipes the GameField westwards.
+        :return:
+        """
         return self._swipe(self.game_field.get_west_iterator())
 
     def _swipe(self, field_iterator: Iterable[Iterable[TileContainer]]) -> int:
         """
-        Traverses a given Iterator and moves/fueses Tiles accordingly.
+        Traverses a given Iterator and moves/fuses Tiles accordingly.
         """
         # first check if the game is lost
         if self.is_lost:
@@ -76,6 +105,8 @@ class GameController(object):
         gamefield_changed = False
         # iterate over the iterator and move/fuse the Tiles.
         for tile_path in field_iterator:  # type: Iterable[TileContainer]
+            # transform the iterator to a list to be able to take the first ele-
+            # ment out:
             path_list = list(tile_path)
             source_tile = path_list[0]  # type: TileContainer
             for target_tile in path_list[1:]:  # type: TileContainer
