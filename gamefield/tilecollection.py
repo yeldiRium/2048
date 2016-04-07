@@ -4,7 +4,14 @@ from gamefield.tile import Tile, EmptyTile, BlockingTile, ValueTile
 
 
 class TileCollection(object):
-    # TODO: add ValueTile
+    """
+    The TileCollection stores and administrates Tile objects, following roughly
+    the 'flyweight' pattern.
+
+    Tiles can be requested and are created, if they can't be found in the sto-
+    rage. Multiple requests to the same kind of Tile all receive the same in-
+    stance of the kind.
+    """
     def __init__(self):
         self.tile_storage = {}
 
