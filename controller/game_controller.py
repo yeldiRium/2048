@@ -1,5 +1,6 @@
 from typing import Iterable
 import random
+from typing import Tuple
 
 from gamefield.gamefield import GameField
 from gamefield.tile import Tile, EmptyTile
@@ -66,6 +67,10 @@ class GameController(object):
         """
         Traverses a given Iterator and moves/fueses Tiles accordingly.
         """
+        # first check if the game is lost
+        if self.is_lost:
+            raise GameLostError()
+
         # store the current score to add the fuse_score to it, if one is created
         score = self._score or 0
         gamefield_changed = False
@@ -97,6 +102,15 @@ class GameController(object):
         if gamefield_changed is False:
             raise InvalidActionError()
 
+        try:
+            # finally add a new random tile
+            # raises exception if there is no space left
+            self._add_random_tile()
+        except NoEmptyContainerError:
+            # no new tile can be placed, no problem. If the game is lost, it
+            # will be determined with the next swipe.
+            pass
+
         # reset the fused status of each TileContainer:
         for col in self.game_field.field_data:
             for tile_container in col:
@@ -104,15 +118,6 @@ class GameController(object):
 
         if self._score is not None:
             self._score = score
-
-        try:
-            # finally add a new random tile
-            # raises exception if there is no space left
-            self._add_random_tile()
-        except NoEmptyContainerError:
-            # since there is no space left, maybe the game is lost. check for it
-            if self.is_lost:
-                raise GameLostError()
 
         return self._score or score
 
@@ -127,9 +132,36 @@ class GameController(object):
                and target_tile.can_accept_fusion_with(source_tile)
 
     @property
-    def is_lost(self) -> bool:
+    def is_lost(self) -> int:
         """
         Returns True if there is no possible action left to take.
+        Possible TODO: could be slow. if there are performance issues, maybe re-
+            view.
         """
-        # TODO: implement test for lost game
-        pass
+        # check for each direction, if an action can be performed
+        for field_iterator in [
+                self.game_field.get_north_iterator(),
+                self.game_field.get_east_iterator(),
+                self.game_field.get_south_iterator(),
+                self.game_field.get_west_iterator()
+        ]:
+            # Iterate over the iterator for the current direction and test, if
+            # any Tile can be moved or fused.
+            for tile_path in field_iterator:  # type: Iterable[TileContainer]
+                path_list = list(tile_path)
+                source_tile = path_list[0]  # type: TileContainer
+                for target_tile in path_list[1:]:  # type: TileContainer
+                    if GameController._moveable(
+                            source_tile.tile,
+                            target_tile.tile
+                    ):
+                        return False
+                    else:
+                        if GameController._fuseable(
+                                source_tile.tile,
+                                target_tile.tile
+                        ):
+                            return False
+                        break
+        else:
+            return True
