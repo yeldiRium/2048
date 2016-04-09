@@ -117,14 +117,16 @@ class GameController(object):
                     # too, to keep it in focus:
                     source_tile = target_tile
                 except MoveNotAllowedError as _:
+                    # if the current tile can't be moved, we try to fuse it.
                     try:
                         score += self._fuse_tile(source_tile, target_tile)
                         gamefield_changed = True
                     except FusionNotAllowedError as _:
-                        # after movement was blocked, the current tile can't mo-
-                        # further after trying to fuse, so this is the end for
-                        # this loop
-                        break
+                        pass
+                    # after movement was blocked, the current tile can't mo-
+                    # further after trying to fuse, so this is the end for
+                    # this loop
+                    break
 
         # if the GameField has not changed during the action, it was an invalid
         # action
@@ -140,8 +142,12 @@ class GameController(object):
             # will be determined with the next swipe.
             pass
 
+        # since the container whose tiles were the receivers of a fusion are
+        # marked, they have to be reset for the next action
         self.reset_fused_containers()
 
+        # if the internal score is None, the game was not initialized and the
+        # moves are executed, but their score is not summed.
         if self._score is not None:
             self._score = score
 
