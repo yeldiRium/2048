@@ -5,8 +5,15 @@ from gamefield.tilecontainer import TileContainer
 
 
 class GameField(object):
+    """
+    The GameField stores all the Tiles inside of TileContainers. It is responsi-
+    ble for iterating over the geometrical representation of the field.
+    """
     @staticmethod
     def basic_field(tile_collection: TileCollection) -> 'GameField':
+        """
+        Sets up a GameField with all its default values.
+        """
         return GameField(tile_collection)
 
     def __init__(
@@ -15,6 +22,9 @@ class GameField(object):
             width: int = 4,
             height: int = 4
     ):
+        """
+        Creates a field of width*height EmptyTiles.
+        """
         self._width = width
         self._height = height
         self.field_data = \
